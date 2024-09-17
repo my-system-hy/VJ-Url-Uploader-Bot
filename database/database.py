@@ -1,20 +1,17 @@
-# Don't Remove Credit Tg - @VJ_Botz
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
-
 import datetime
 import motor.motor_asyncio
+import os
 
 class Database:
 
     def __init__(self, uri, database_name):
+        # Initialize client with the correct MongoDB URI
         self._client = motor.motor_asyncio.AsyncIOMotorClient(uri)
         self.clinton = self._client[database_name]
         self.col = self.clinton.USERS
 
     def new_user(self, id):
         return dict(id=id, thumbnail=None)
-
 
     async def add_user(self, id):
         user = self.new_user(id)
@@ -41,3 +38,7 @@ class Database:
     async def get_thumbnail(self, id):
         user = await self.col.find_one({'id': int(id)})
         return user.get('thumbnail', None)
+
+
+# Example usage
+db = Database(uri=os.getenv("MONGO_URI"), database_name="mydatabase")
